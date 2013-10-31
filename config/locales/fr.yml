@@ -1,0 +1,23 @@
+fr:
+  Language: langue
+  spree:
+    invoice_print: Facture Imprimer
+    language: langue
+    vat_number: Vat Nombre
+    company:
+         company_settings: Entreprise réglages  
+         company_name: Entreprise nom   
+         company_slogan:  Entreprise Slogan  
+         company_address_number: Entreprise adresse nombre  
+         company_street:  Entreprise rue  
+         company_city:    Entreprise ville  
+         company_zip:     Entreprise Code Postal  
+         company_phone:   Entreprise téléphone  
+         company_fax:     Entreprise Fax  
+         company_email:   Entreprise Email  
+         company_website: Entreprise site Web  
+         company_vatnumber: Entreprise Vat-nombre  
+         company_bannumber: Entreprise Ban-nombre  
+         company_bicnumber: Entreprise BIC-nombre  
+    Bulk PDF Generation: BULK PDF Génération
+    Language: Langue

@@ -1,0 +1,23 @@
+de:
+  Language: Taal
+  spree:
+      invoice_print: Factuur Afdrukken
+      language: Taal
+      vat_number: Vat Aantal
+      company:
+         company_settings: Firma Instellingen
+         company_name: Firma naam  
+         company_slogan:  Firma leuze  
+         company_address_number: Firma adres Number
+         company_street:  Firma straat  
+         company_city:    Firma stad  
+         company_zip:     Firma ZipCode  
+         company_phone:   Firma telefoon  
+         company_fax:     Firma Fax  
+         company_email:   Firma e-mail  
+         company_website: Firma Website  
+         company_vatnumber: Firma Vat Aantal
+         company_bannumber: Firma Ban Aantal
+         company_bicnumber: Firma BIC Aantal
+      Bulk PDF Generation: BULK PDF Generatie
+      Language: Taal
