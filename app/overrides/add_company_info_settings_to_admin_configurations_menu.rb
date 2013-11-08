@@ -7,3 +7,5 @@ Deface::Override.new(:virtual_path => "spree/admin/shared/_configuration_menu",
                                                              :disabled => false)
 
 #Adding company information configuration in Admin Configuration Tabs.
+#Adding company information configuration in Admin Configuration Tabs.
+
