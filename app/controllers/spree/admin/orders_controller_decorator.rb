@@ -3,7 +3,7 @@ Spree::Admin::OrdersController.class_eval do
   require "prawn"
   require "prawn/layout"
  def show
- 	load_order
+  load_order
    @order = order.find(params[:number])
    respond_to do |format|
      format.pdf do

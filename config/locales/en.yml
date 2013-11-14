@@ -9,7 +9,7 @@ en:
 
   Language: Language  
   spree:
-    invoice_print: purchase proforma  
+    invoice_print: Print Invoice  
     language: Language
     vat_number: Vat Number  
     company:
