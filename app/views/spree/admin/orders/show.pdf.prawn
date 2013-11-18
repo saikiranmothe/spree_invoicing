@@ -170,7 +170,6 @@ pdf.transparent(0.0) { pdf.stroke_bounds }
   pdf.text "Transction Date : #{@order.created_at.to_date}",align: :right
   pdf.text "INVOICE NUMBER : #{(@order.number.to_s)}"  ,align: :right
   pdf.text "TRANSCTION DATE :#{(@order.updated_at.to_date)}"   ,align: :right
-  pdf.text "ACCOUNT : BAN NUMBER", align: :right
   pdf.text "company BIC : BIC NUMBER",align: :right
 end
 

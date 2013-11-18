@@ -47,8 +47,7 @@ end
         pdf.text "INVOICE DATE : #{(orders.created_at.to_date)}",:align => :right
         pdf.text "INVOICE NUMBER : #{(orders.number.to_s)}", :align => :right
         pdf.text "TRANSCTION DATE :#{(orders.updated_at.to_date)}", :align => :right
-        pdf.text "ACCOUNT : #{Spree::Company::Config.company_bannumber}" , align: :right
-        pdf.text "BIC : #{Spree::Company::Config.company_bicnumber}" ,align: :right
+       
     end
 pdf.move_down 15
 

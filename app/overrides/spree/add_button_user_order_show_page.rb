@@ -25,3 +25,10 @@
 #                      :name => "example-1", 
 #                      :replace => "div#checkout-summary-box", 
 #                      :text => "<h1>New Post</h1>")
+
+
+Deface::Override.new(:virtual_path => "spree/checkout/_summary",
+		:name => "shipping_transport",
+		:replace => "[data-hook='checkout_summary_box']",
+		:text => "Transport"
+)
