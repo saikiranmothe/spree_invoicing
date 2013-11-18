@@ -172,7 +172,7 @@ end
    pdf.move_cursor_to 45
    pdf.stroke_horizontal_rule
    pdf.move_down 5
-   pdf.text "Payment made beyond due date shall be charged interest @ 24% per annum "
+       pdf.text "* This is a Computer Generated Purchase Proforma & requires no Signature"
    pdf.text "Contact :: #{Spree::Company::Config.company_name},#{Spree::Company::Config.company_phone} or #{Spree::Company::Config.company_email}",style: :bold
 
   #  PDF ENDS HERE
