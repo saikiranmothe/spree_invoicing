@@ -9,16 +9,15 @@
              pdf.font "Helvetica"
              pdf.image "#{Rails.root.to_s}/app/assets/images/#{Spree::PrintInvoiceConfig[:print_invoice_logo_path]}" ,width:180 ,height:60
 
-             pdf.move_up 50
+             pdf.move_up 60
 
   #Company Details
   ##################################
   y_position = pdf.cursor - 10
-  pdf.bounding_box([350, y_position], width: 200, height: 100) do
+  pdf.bounding_box([300, y_position], width: 300, height: 80) do
   pdf.transparent(0.0) { pdf.stroke_bounds }
              pdf.text "Admin Off : #{Spree::Company::Config.company_address_number}," 
-             pdf.text "#{Spree::Company::Config.company_street}," ,align:  :center
-             pdf.text "#{Spree::Company::Config.company_city} - #{Spree::Company::Config.company_zip}." ,align:  :center
+             pdf.text "#{Spree::Company::Config.company_street}, #{Spree::Company::Config.company_city} - #{Spree::Company::Config.company_zip}."
              pdf.text "Contact : #{Spree::Company::Config.company_phone}"
              pdf.text "Email : #{Spree::Company::Config.company_email}"
              pdf.text "Website : #{Spree::Company::Config.company_website}"
@@ -82,24 +81,26 @@ end
   #Billing Address Details
   ##################################
   y_position = pdf.cursor - 10
-  pdf.bounding_box([0, y_position], width: 200, height: 100) do
+  pdf.bounding_box([0, y_position], width: 300, height: 120) do
     pdf.transparent(0.0) { pdf.stroke_bounds }
     pdf.text "To:",size:15 , style: :bold,align: :left
     pdf.text "#{@order.bill_address.first_name}  #{@order.bill_address.lastname}"
-    pdf.text "#{@order.bill_address.address1}  #{@order.bill_address.address2}"
-    pdf.text "#{@order.bill_address.city} #{@order.bill_address.state_name} #{@order.bill_address.zipcode}"
-    pdf.text "#{@order.bill_address.vat_number}"
+    pdf.text "#{@order.bill_address.address1.capitalize} ,  #{@order.bill_address.address2.capitalize} ,"
+    pdf.text "#{@order.bill_address.city.capitalize} - #{@order.bill_address.zipcode}"
+    pdf.text "#{@order.bill_address.state}"
+    pdf.text "Vat : #{@order.bill_address.vat_number}"
   end
 
   #Shipping Address Details
   ##################################
 
-  pdf.bounding_box([300, y_position], width: 200, height: 100) do
+  pdf.bounding_box([300, y_position], width: 300, height: 120) do
     pdf.transparent(0.0) { pdf.stroke_bounds }
     pdf.text "SHIP To:",size:15 , style: :bold,align: :left
     pdf.text "#{@order.ship_address.first_name}  #{@order.ship_address.lastname}"
-    pdf.text "#{@order.ship_address.address1}  #{@order.ship_address.address2}"
-    pdf.text "#{@order.ship_address.city} #{@order.ship_address.state_name} #{@order.ship_address.zipcode}"
+    pdf.text "#{@order.ship_address.address1.capitalize} ,  #{@order.ship_address.address2.capitalize} ,"
+    pdf.text "#{@order.ship_address.city.capitalize} -  #{@order.ship_address.zipcode}"
+    pdf.text "#{@order.ship_address.state}"
     pdf.text "Phone : #{@order.ship_address.phone}"
   end
 
@@ -115,41 +116,49 @@ end
   ##################################
   # Information Comments  Ends Here.
   ##################################
-  pdf.move_down 10
+  pdf.move_down 5
   pdf.stroke_horizontal_rule
 
-   @order.line_items.each do |item|
-   @name= item.variant.product.name
-   @item_price = number_to_currency(item.price)
-   @quantity = item.quantity.to_s
-   @total = number_to_currency(item.price * item.quantity)
-   #@discount = number_to_currency(-1 * item.discount)
-   #@total_discount = number_to_currency(-1 * item.discount * item.quantity)
-   @name1 = item.variant.options_text.inspect
-   end
+  pdf.table([ ["S.No","Description","Quantity","Unit Price","Unit Value"] ],:column_widths => [40,280,60,70,90], cell_style: {align: :center})
+  @count ||= 0
+  @order.line_items.each do |i|
+    @quantity = i.quantity
+    @name = i.variant.product.name
+    @item_price = i.price
+    @item_value = @quantity * @item_price
+    @count += 1
+    pdf.table([ ["#{@count}","#{@name}","#{@quantity}","#{@item_price}","#{@item_value}"] ],:column_widths => [40,280,60,70,90], cell_style: {align: :center})
+  end
+
+  pdf.table([ ["","","","Sub-Total","#{@order.display_item_total}".gsub(/₹/, ' ')] ],:column_widths => [40,280,60,70,90], cell_style: {align: :center})
+  pdf.table([ ["","","","VAT(5%)","#{@order.tax_total}"] ],:column_widths => [40,280,60,70,90], cell_style: {align: :center})
+  pdf.table([ ["","","","Shipping","#{@order.display_ship_total}".gsub(/₹/, ' ')] ],:column_widths => [40,280,60,70,90], cell_style: {align: :center})
+  pdf.table([ ["","","","Total Due","#{@order.display_total}".gsub(/₹/, ' ')] ],:column_widths => [40,280,60,70,90], cell_style: {align: :center})
+
+
+
+  @order.line_items.each do |item|
+    @name = item.variant.product.name
+    @item_price = number_to_currency(item.price, :unit => "")
+    @quantity = item.quantity.to_s
+    @total = number_to_currency(item.price * item.quantity)
+    #@discount = number_to_currency(-1 * item.discount)
+    #@total_discount = number_to_currency(-1 * item.discount * item.quantity)
+    @name1 = item.variant.options_text.inspect
+  end
     
-   @order.adjustments.eligible.each do |adjustment|
-      next if (adjustment.originator_type == 'Spree::TaxRate') and (adjustment.amount == 0)
-     next if (adjustment.amount == 0)
-     @product_adjustment_label =  adjustment.label
-     @product_adjustment = number_to_currency adjustment.amount
-    end
+  @order.adjustments.eligible.each do |adjustment|
+    next if (adjustment.originator_type == 'Spree::TaxRate') and (adjustment.amount == 0)
+    next if (adjustment.amount == 0)
+    @product_adjustment_label =  adjustment.label
+    @product_adjustment = number_to_currency adjustment.amount
+  end
 
     @subtotal =
 
   # LIne Items / Order Data in Table
   ##################################
 
-    pdf.table([ ["Quantity","Description","Unit Price","VAT(5%)","Total"],
-                ["#{@quantity}","#{@name}","#{@item_price}","#{number_to_currency  @order.tax_total}",
-                  "#{@order.display_item_total}"],
-                ["","",""," Sub-Total","#{@order.display_item_total}"],
-                ["","","","Vat","#{number_to_currency @order.tax_total}"],
-                ["","","","Shipping & Handling","#{@order.display_ship_total}"],
-                ["","","","Coupon Discount",""],
-                ["","","","Total Due","#{@order.display_total}"]
-              ],:column_widths => [60, 180, 80, 100, 120], cell_style: {align: :center})
-  
   # RTGS DETAILS
   ########################
    
@@ -169,11 +178,24 @@ end
   #  Footer
   ##############################################
 
-   pdf.move_cursor_to 45
-   pdf.stroke_horizontal_rule
-   pdf.move_down 5
-       pdf.text "* This is a Computer Generated Purchase Proforma & requires no Signature"
-   pdf.text "Contact :: #{Spree::Company::Config.company_name},#{Spree::Company::Config.company_phone} or #{Spree::Company::Config.company_email}",style: :bold
+
+    pdf.move_down 30
+
+    pdf.text "Thanking You,"
+    pdf.move_down 5
+    pdf.text "Yours Faithfully,"
+    pdf.move_down 5
+    pdf.text "For SALASAR INDUSTRIES INDIA LIMITED"
+    
+    pdf.move_down 30
+
+    #pdf.move_cursor_to 45
+    
+    pdf.text "* This is a Computarized Generated proforma & requires no Signature"
+    pdf.stroke_horizontal_rule
+    pdf.move_down 5
+    pdf.text "Payment made beyond due date shall be charged interest @ 24% per annum "
+    #pdf.text "Contact :: #{Spree::Company::Config.company_name},#{Spree::Company::Config.company_phone} or #{Spree::Company::Config.company_email}",style: :bold
 
   #  PDF ENDS HERE
   ##############################################
