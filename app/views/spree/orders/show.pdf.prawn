@@ -2,15 +2,14 @@
   require 'prawn'
   require 'prawn/layout'
 
-  @date = 
-
+  
   #Logo company
   ##################################
              pdf.font "Helvetica"
              pdf.image "#{Rails.root.to_s}/app/assets/images/#{Spree::PrintInvoiceConfig[:print_invoice_logo_path]}" ,width:180 ,height:100
 
              pdf.move_up 90
-             
+
   #Company Details
   ##################################
   y_position = pdf.cursor - 10
@@ -187,15 +186,11 @@ end
     pdf.move_down 5
     pdf.text "For SALASAR INDUSTRIES INDIA LIMITED"
     
-    pdf.move_down 30
+    pdf.move_down 10
 
-    #pdf.move_cursor_to 45
     
-    pdf.text "* This is a Computarized Generated proforma & requires no Signature"
+    pdf.text "* This is a Computer Generated proforma & requires no Signature"
     pdf.stroke_horizontal_rule
-    pdf.move_down 5
-    pdf.text "Payment made beyond due date shall be charged interest @ 24% per annum "
-    #pdf.text "Contact :: #{Spree::Company::Config.company_name},#{Spree::Company::Config.company_phone} or #{Spree::Company::Config.company_email}",style: :bold
 
   #  PDF ENDS HERE
   ##############################################
