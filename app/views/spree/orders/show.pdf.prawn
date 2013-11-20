@@ -7,10 +7,10 @@
   #Logo company
   ##################################
              pdf.font "Helvetica"
-             pdf.image "#{Rails.root.to_s}/app/assets/images/#{Spree::PrintInvoiceConfig[:print_invoice_logo_path]}" ,width:180 ,height:60
+             pdf.image "#{Rails.root.to_s}/app/assets/images/#{Spree::PrintInvoiceConfig[:print_invoice_logo_path]}" ,width:180 ,height:100
 
-             pdf.move_up 60
-
+             pdf.move_up 90
+             
   #Company Details
   ##################################
   y_position = pdf.cursor - 10
